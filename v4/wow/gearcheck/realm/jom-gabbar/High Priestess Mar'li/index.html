@@ -1,0 +1,5462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+
+    <script>const whTooltips = {colorLinks: false, iconizeLinks: false, renameLinks: false, iconSize: 'small'};</script>
+    <script src="https://wow.zamimg.com/widgets/power.js"></script>
+    <title>v4  - Gear Check</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7JE7FK3DZ0"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7JE7FK3DZ0');
+    </script>
+
+
+
+    <style>
+    body {  background-color: #6e6e6e; padding-top: 65px;}
+
+
+
+    .container {
+    min-height: calc(100vh - 120px);
+}
+
+.footer {
+    background-color: #767676;
+    min-height: 60px;
+}
+    .small-icon {
+        width: 25px;
+    }
+    .unchanted{
+                border-style: outset;
+                border-radius: 20px;
+            }
+
+    /*.legend {
+        background: orange;
+    }*/
+
+
+
+.Mage {
+    background: #69CCF0;
+} 
+.Warlock {
+    background: #9482C9;
+} 
+.Hunter {
+    background: #ABD473;
+} 
+.Rogue {
+    background: #FFF569;
+} 
+.Warrior {
+    background: #C79C6E;
+} 
+.Warrior-Tank {
+    background: #C79C6E;
+} 
+.Druid {
+    background: #FF7D0A;
+} 
+.Druid-Tank {
+    background: #FF7D0A;
+} 
+.Paladin {
+    background: #F58CBA;
+} 
+.Priest {
+    background: #FFFFFF;
+} 
+
+            /*Generic Styling, for Desktops/Laptops
+*/
+
+.gear-best{
+    background: purple;
+}
+.gear-optional{
+    background: blue;
+}
+.gear-replace{
+    background: yellow;
+}
+
+table {
+  /*width: 100%; */
+  border-collapse: collapse;
+}
+/* Zebra striping */
+/*tr:nth-of-type(odd) {
+  background: #eee;
+}*/
+
+ /* round cornders */
+.players tr{
+        border-radius: 20px;
+        filter: drop-shadow(0 0 0.75rem black);
+    }
+    .players tr {
+      margin: 0 0 1rem 0;
+      padding: 5px;
+    }
+
+th {
+  background: #333;
+  color: white;
+  font-weight: bold;
+}
+td, th {
+  padding: 6px;
+  /*border: 1px solid #ccc; */
+  text-align: left;
+}
+
+.players td:first-of-type {
+  border-radius : 15px 0px 0px 15px;
+}
+
+.players td:last-of-type {
+  border-radius : 0px 15px 15px 0px;
+}
+
+
+
+.dropdown-menu {
+  overflow-y:auto;
+  max-height:80vh;
+}
+
+</style>
+
+
+
+
+<style>
+
+
+
+
+
+
+/*
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+
+@media
+only screen and (max-width: 760px),
+(min-width: 768px) and (max-width: 1024px)  {
+
+  .dropdown-menu {
+  overflow-y:auto;
+  max-height:40vh;
+  }
+	/* Force table to not be like tables anymore */
+	.players table{
+		/*display: block; */
+
+    display: grid;
+    width: 300px;
+    align-content: center;
+    /*grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;*/
+    /*background-color: #2196F3;*/
+
+    padding: 10px;
+
+	}
+
+    .players table, .players thead, .players tbody, .players th, .players td, .players tr {
+		/*display: block; */
+
+    display: grid;
+    /*width: 10px;*/
+
+    /*grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;*/
+    /*background-color: #2196F3;*/
+
+    padding: 5px;
+
+	}
+
+    .players tr{
+        border-radius: 20px;
+        filter: drop-shadow(0 0 0.75rem black);
+    }
+    .players tr {
+      margin: 0 0 1rem 0;
+    }
+    .players td {
+        width: 37px;
+    }
+
+
+	/*
+	Label the data
+	*/
+	.players td:nth-of-type(1) { width: 200px; grid-row: 1; grid-column: 1 / span 6; border: none; }
+	.players td:nth-of-type(2) { width: 200px; grid-row: 5; grid-column: 1 / span 6; border: none; }
+
+
+    .players td:nth-of-type(3) { grid-row: 2; }
+    .players td:nth-of-type(4) { grid-row: 2; }
+	.players td:nth-of-type(5) { grid-row: 2; }
+	.players td:nth-of-type(6) { grid-row: 2; }
+	.players td:nth-of-type(7) { grid-row: 2; }
+	.players td:nth-of-type(8) { grid-row: 2; }
+
+    .players td:nth-of-type(9) { grid-row: 3; }
+	.players td:nth-of-type(10) { grid-row: 3; }
+	.players td:nth-of-type(11) { grid-row: 3; }
+	.players td:nth-of-type(12) { grid-row: 3; }
+	.players td:nth-of-type(13) { grid-row: 3; }
+	.players td:nth-of-type(14) { grid-row: 3; }
+
+    .players td:nth-of-type(15) { grid-row: 4; }
+	.players td:nth-of-type(16) { grid-row: 4; }
+	.players td:nth-of-type(17) { grid-row: 4; }
+	.players td:nth-of-type(18) { grid-row: 4; }
+	.players td:nth-of-type(19) { grid-row: 4; }
+	.players td:nth-of-type(20) { grid-row: 4; }
+
+  .players td:nth-of-type(21) { width: 200px; grid-row: 6; grid-column: 1 / span 6; }
+  .players td:nth-of-type(22) { width: 200px; grid-row: 7; grid-column: 1 / span 6; }
+
+
+
+  .players th:nth-of-type(1) { width: 200px; grid-row: 1; grid-column: 1 / span 6; border: none; }
+	.players th:nth-of-type(2) { width: 200px; grid-row: 3; grid-column: 1 / span 6; border: none; }
+  .players th:nth-of-type(3) { width: 200px; grid-row: 2; grid-column: 1 / span 6; border: none; }
+  .players th:nth-of-type(4) { width: 200px; grid-row: 4; grid-column: 1 / span 6; border: none; }
+  .players th:nth-of-type(5) { width: 200px; grid-row: 5; grid-column: 1 / span 6; border: none; }
+
+
+
+
+
+
+
+/* Force table to not be like tables anymore */
+.players table{
+		/*display: block; */
+
+    display: grid;
+    width: 300px;
+
+    /*grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;*/
+    /*background-color: #2196F3;*/
+
+    padding: 10px;
+
+	}
+
+    .legend table, .legend thead, .legend tbody, .legend th, .legend td, .legend tr {
+		/*display: block; */
+
+    display: grid;
+    /*width: 10px;*/
+
+    /*grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;*/
+    /*background-color: #2196F3;*/
+
+    padding: 10px;
+
+	}
+
+    .legend tr{
+        border-radius: 20px;
+        background: grey;
+    }
+    .legend tr {
+      margin: 0 0 1rem 0;
+    }
+    .legend td {
+        width: 50px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    .legend td:nth-of-type(1) { grid-row: 1; width: 50px;  }
+	.legend td:nth-of-type(2) { grid-row: 1; width: 100px; }
+    .legend td:nth-of-type(3) { grid-row: 1; width: 50px; }
+    .legend td:nth-of-type(4) { grid-row: 1; width: 100px; }
+    .legend td:nth-of-type(5) { grid-row: 2; width: 50px;}
+    .legend td:nth-of-type(6) { grid-row: 2; width: 100px;}
+    .legend td:nth-of-type(7) { grid-row: 2; width: 50px;}
+    .legend td:nth-of-type(8) { grid-row: 2; width: 100px;}
+    /*.legend tr:nth-of-type(1) { grid-row: 1; }
+	.legend tr:nth-of-type(2) { grid-row: 1; }
+    .legend tr:nth-of-type(3) { grid-row: 2; }
+    .legend tr:nth-of-type(4) { grid-row: 3; }*/
+
+
+}
+
+
+
+
+/*.container {height: 100vh; }*/
+
+
+
+    </style>
+
+  </head>
+  <body>
+<header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <div class="mx-auto">
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ">
+              <a class="navbar-brand" href="/v4/wow/">HOME</a>
+          
+          
+          <a class="navbar-brand" href="/v4/wow/gearcheck/realm/jom-gabbar/">JOM-GABBAR</a>
+          
+          <a class="navbar-brand" href="#"></a>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="false"></a>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Boss Encounter</a>
+                <div class="dropdown-menu">
+                  
+                  
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Raid Day</a>
+              <div class="dropdown-menu">
+                  
+                  
+              </div>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Bosses by Date</a>
+            <div class="dropdown-menu" >
+              
+                
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">All</a>
+            </div>
+        </li>
+        
+
+
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Bosses by Date</a>
+          <div class="dropdown-menu" >
+            
+              
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">All</a>
+          </div>
+      </li>
+      
+
+
+
+      </ul>
+          </div>
+        </div>
+        </nav>
+    </header>
+
+
+    <div class="container">
+        
+        <div class="row">
+
+        <!--div class="mx-auto"-->
+        <div class="col-lg-12 ">
+
+            <table class="players mx-auto">
+            <tr>
+              <th>Player</th>
+              <th>HIT</th>
+              <th colspan=18>Gear</th>
+              <th>Encounter</th>
+              <th>Date</th>
+            </tr>
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Mage" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Angertink/">Angertink</a>
+                    </td>
+                    <td> 8 HIT
+                        </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22267&domain=classic"
+                    rel="ench=2588"><img class="small-icon" src="/static/images/icons/inv_helmet_62.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19923&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_03.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19845&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_17.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19682&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=22716&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19683&domain=classic"
+                    rel="ench=2588"><img class="small-icon" src="/static/images/icons/inv_pants_cloth_14.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19684&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_cloth_02.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19846&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19929&domain=classic"
+                    rel="ench=930"><img class="small-icon" src="/static/images/icons/inv_gauntlets_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=22433&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19893&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_46.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18820&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_stonetablet_11.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22711&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22335&domain=classic"
+                    rel="ench=2568"><img class="small-icon" src="/static/images/icons/inv_staff_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19108&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_wand_01.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Mage" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Nubnub/">Nubnub</a>
+                    </td>
+                    <td> 7 HIT
+                        </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=10041&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_crown_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22403&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19845&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_17.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20034&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_12.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11662&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_29.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19683&domain=classic"
+                    rel="ench=2588"><img class="small-icon" src="/static/images/icons/inv_pants_cloth_14.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19897&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_cloth_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16703&domain=classic"
+                    rel="ench=723"><img class="small-icon" src="/static/images/icons/inv_bracer_13.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19929&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22721&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12543&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13968&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_08.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19857&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_22.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19964&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_sword_37.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19891&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_bag_10_black.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19108&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_wand_01.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Warlock" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Kuje/">Kuje</a>
+                    </td>
+                    <td> 10 HIT
+                        </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22267&domain=classic"
+                    rel="ench=2589"><img class="small-icon" src="/static/images/icons/inv_helmet_62.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22403&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19849&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19682&domain=classic"
+                    rel="ench=928"><img class="small-icon" src="/static/images/icons/inv_chest_cloth_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19136&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_11.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19683&domain=classic"
+                    rel="ench=2589"><img class="small-icon" src="/static/images/icons/inv_pants_cloth_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19684&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_cloth_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19848&domain=classic"
+                    rel="ench=929"><img class="small-icon" src="/static/images/icons/inv_bracer_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19929&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22433&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_46.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19893&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12930&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_root_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19857&domain=classic"
+                    rel="ench=1888"><img class="small-icon" src="/static/images/icons/inv_misc_cape_22.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19864&domain=classic"
+                    rel="ench=2504"><img class="small-icon" src="/static/images/icons/inv_sword_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22329&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_wand_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=13938&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_bone_taurenskull_01.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Hunter" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Lulu/">Lulu</a>
+                    </td>
+                    <td>4 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16677&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_24.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=1443&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_amulet_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12927&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16674&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_chain_03.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16680&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_28.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16678&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_03.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16675&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_plate_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16681&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_17.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16676&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18500&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18500&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18473&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18537&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_stone_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22712&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18520&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_sword_11.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19107&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_07.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Hunter" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Tranqbot/">Tranqbot</a>
+                    </td>
+                    <td>5 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19875&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_39.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=15411&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12082&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_16.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19904&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_plate08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19832&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_19.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19919&domain=classic"
+                    rel="ench=904"><img class="small-icon" src="/static/images/icons/inv_boots_chain_04.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19833&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15063&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_26.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18821&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=9533&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_03.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18473&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22712&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_16.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19900&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_axe_34.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19107&domain=classic"
+                    rel="ench=664"><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_07.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    <tr class="Hunter" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Whitecoffee/">Whitecoffee</a>
+                    </td>
+                    <td>6 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19875&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_39.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12929&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_05.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12927&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11726&domain=classic"
+                    rel="ench=1892"><img class="small-icon" src="/static/images/icons/inv_chest_chain_15.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18393&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_34.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=11627&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12966&domain=classic"
+                    rel="ench=1886"><img class="small-icon" src="/static/images/icons/inv_bracer_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15063&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_26.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19898&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_44.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19325&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_35.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19991&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_eye_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13340&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19900&domain=classic"
+                    rel="ench=2646"><img class="small-icon" src="/static/images/icons/inv_axe_34.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19107&domain=classic"
+                    rel="ench=2523"><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_07.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Rogue" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Batusai/">Batusai</a>
+                    </td>
+                    <td>10 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12587&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_46.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22340&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_04.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19835&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_29.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16820&domain=classic"
+                    rel="ench=1891"><img class="small-icon" src="/static/images/icons/inv_chest_cloth_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20216&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_14.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19906&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_chain_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19836&domain=classic"
+                    rel="ench=1885"><img class="small-icon" src="/static/images/icons/inv_bracer_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16826&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_21.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22722&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13098&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18465&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=11626&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18832&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_15.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19859&domain=classic"
+                    rel="ench=2564"><img class="small-icon" src="/static/images/icons/inv_weapon_shortblade_30.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18323&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_bow_03.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Rogue" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Ivoleth/">Ivoleth</a>
+                    </td>
+                    <td>7 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22005&domain=classic"
+                    rel="ench=2585"><img class="small-icon" src="/static/images/icons/inv_helmet_41.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18404&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_09.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19835&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_29.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22009&domain=classic"
+                    rel="ench=928"><img class="small-icon" src="/static/images/icons/inv_chest_leather_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20216&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22007&domain=classic"
+                    rel="ench=2585"><img class="small-icon" src="/static/images/icons/inv_pants_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22003&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_boots_08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19836&domain=classic"
+                    rel="ench=1885"><img class="small-icon" src="/static/images/icons/inv_bracer_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22006&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_24.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18500&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13098&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13340&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12940&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_43.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19866&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_55.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12651&domain=classic"
+                    rel="ench=664"><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_04.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Rogue" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Sjj/">Sjj</a>
+                    </td>
+                    <td>6 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=13404&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_bandana_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19616&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_25.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19835&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_29.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19834&domain=classic"
+                    rel="ench=1892"><img class="small-icon" src="/static/images/icons/inv_chest_leather_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16827&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_23.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=17728&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19836&domain=classic"
+                    rel="ench=1886"><img class="small-icon" src="/static/images/icons/inv_bracer_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15063&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_26.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22722&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=17713&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18857&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_trinketpvp_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=22712&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=24222&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_weapon_shortblade_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=5267&domain=classic"
+                    rel="ench=2564"><img class="small-icon" src="/static/images/icons/inv_weapon_shortblade_03.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19107&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_07.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    <tr class="Warrior" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Alphasmoke/">Alphasmoke</a>
+                    </td>
+                    <td>8 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12640&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_36.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19856&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_22.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=23315&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_11.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=23300&domain=classic"
+                    rel="ench=928"><img class="small-icon" src="/static/images/icons/inv_chest_plate16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20216&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16479&domain=classic"
+                    rel="ench=1506"><img class="small-icon" src="/static/images/icons/inv_pants_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16483&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_plate_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16861&domain=classic"
+                    rel="ench=856"><img class="small-icon" src="/static/images/icons/inv_bracer_19.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16484&domain=classic"
+                    rel="ench=927"><img class="small-icon" src="/static/images/icons/inv_gauntlets_29.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19325&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_35.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=17713&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20073&domain=classic"
+                    rel="ench=849"><img class="small-icon" src="/static/images/icons/inv_misc_cape_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18822&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_28.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18323&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_bow_03.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Warrior" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Rogrum/">Rogrum</a>
+                    </td>
+                    <td>7 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12640&domain=classic"
+                    rel="ench=2543"><img class="small-icon" src="/static/images/icons/inv_helmet_36.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12929&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_05.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12927&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=11926&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_chain_07.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19823&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_32.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18380&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_04.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=11919&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_plate_08.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12936&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_17.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22714&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_31.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=17713&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13098&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20130&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_drink_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=22337&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_19.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19867&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_sword_54.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12939&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_sword_40.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19107&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_07.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    <tr class="Warrior" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Saphorus/">Saphorus</a>
+                    </td>
+                    <td>7 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12640&domain=classic"
+                    rel="ench=1506"><img class="small-icon" src="/static/images/icons/inv_helmet_36.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15411&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19878&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11726&domain=classic"
+                    rel="ench=928"><img class="small-icon" src="/static/images/icons/inv_chest_chain_15.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19823&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_32.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=13967&domain=classic"
+                    rel="ench=929"><img class="small-icon" src="/static/images/icons/inv_boots_plate_04.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=11765&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22714&domain=classic"
+                    rel="ench=927"><img class="small-icon" src="/static/images/icons/inv_gauntlets_31.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13098&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12548&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13340&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18348&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19866&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_55.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18323&domain=classic"
+                    rel="ench=664"><img class="small-icon" src="/static/images/icons/inv_weapon_bow_03.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Warrior" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Tinkk/">Tinkk</a>
+                    </td>
+                    <td>9 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12640&domain=classic"
+                    rel="ench=1506"><img class="small-icon" src="/static/images/icons/inv_helmet_36.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=15411&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12927&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18530&domain=classic"
+                    rel="ench=928"><img class="small-icon" src="/static/images/icons/inv_chest_chain_12.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13142&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_33.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=20671&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_plate_12.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=13967&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_plate_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12936&domain=classic"
+                    rel="ench=927"><img class="small-icon" src="/static/images/icons/inv_bracer_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22714&domain=classic"
+                    rel="ench=927"><img class="small-icon" src="/static/images/icons/inv_gauntlets_31.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18522&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13098&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_32.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=12905&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12940&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_43.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12939&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_sword_40.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12651&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_04.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Warrior" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Wyrmwyyd/">Wyrmwyyd</a>
+                    </td>
+                    <td>4 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16963&domain=classic"
+                    rel="ench=2583"><img class="small-icon" src="/static/images/icons/inv_helmet_71.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=12929&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_05.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=16733&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_30.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11726&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_chain_15.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13142&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_33.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19855&domain=classic"
+                    rel="ench=2583"><img class="small-icon" src="/static/images/icons/inv_pants_plate_21.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16862&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_plate_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12936&domain=classic"
+                    rel="ench=1886"><img class="small-icon" src="/static/images/icons/inv_bracer_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16863&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=13373&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_bone_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=2246&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13965&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_armorkit_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=11815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=12905&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_16.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19859&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_weapon_shortblade_30.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=12590&domain=classic"
+                    rel="ench=1900"><img class="small-icon" src="/static/images/icons/inv_weapon_shortblade_25.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12651&domain=classic"
+                    rel="ench=664"><img class="small-icon" src="/static/images/icons/inv_weapon_crossbow_04.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Druid" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Daeralda/">Daeralda</a>
+                    </td>
+                    <td>0 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16900&domain=classic"
+                    rel="ench=2591"><img class="small-icon" src="/static/images/icons/inv_helmet_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18723&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19928&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13346&domain=classic"
+                    rel="ench=1891"><img class="small-icon" src="/static/images/icons/inv_chest_cloth_08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18327&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18386&domain=classic"
+                    rel="ench=2591"><img class="small-icon" src="/static/images/icons/inv_pants_06.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22247&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_cloth_03.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16904&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_03.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19369&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_06.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19863&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_19.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16058&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_47.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18470&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18510&domain=classic"
+                    rel="ench=1888"><img class="small-icon" src="/static/images/icons/inv_misc_cape_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22713&domain=classic"
+                    rel="ench=2505"><img class="small-icon" src="/static/images/icons/inv_waepon_bow_zulgrub_d_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19312&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_flower_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22398&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_relics_idolofrejuvenation.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Druid" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Nabudis/">Nabudis</a>
+                    </td>
+                    <td>8 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19945&domain=classic"
+                    rel="ench=2543"><img class="small-icon" src="/static/images/icons/inv_helmet_46.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18404&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=12927&domain=classic"
+                    rel="ench=2483"><img class="small-icon" src="/static/images/icons/inv_shoulder_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=13944&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_chain_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=20216&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=15062&domain=classic"
+                    rel="ench=2543"><img class="small-icon" src="/static/images/icons/inv_pants_wolf.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19906&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_chain_04.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19146&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=15063&domain=classic"
+                    rel="ench=1887"><img class="small-icon" src="/static/images/icons/inv_gauntlets_26.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19925&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_44.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19898&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_44.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=13966&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19949&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=13340&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_20.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=18531&domain=classic"
+                    rel="ench=34"><img class="small-icon" src="/static/images/icons/inv_hammer_22.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=23198&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_relics_idolofferocity.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Paladin" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Handonn/">Handonn</a>
+                    </td>
+                    <td>3 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16727&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19871&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_21.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=14552&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_20.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19693&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_plate08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16858&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_27.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19694&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_plate_21.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19913&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_plate_06.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=16857&domain=classic"
+                    rel="ench=927"><img class="small-icon" src="/static/images/icons/inv_bracer_18.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=14622&domain=classic"
+                    rel="ench=856"><img class="small-icon" src="/static/images/icons/inv_gauntlets_28.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=11669&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=10795&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_04.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19948&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12930&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_root_02.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=19888&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_21.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=871&domain=classic"
+                    rel="ench=0"><img class="small-icon" src="/static/images/icons/inv_axe_17.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=1168&domain=classic"
+                    rel="ench=1704"><img class="small-icon" src="/static/images/icons/inv_shield_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=23203&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_relics_libramoftruth.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Paladin" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Surety/">Surety</a>
+                    </td>
+                    <td>0 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18490&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_41.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18723&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22234&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_09.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=20032&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_25.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19162&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_24.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19877&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_mail_14.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16859&domain=classic"
+                    rel="ench=911"><img class="small-icon" src="/static/images/icons/inv_boots_plate_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=13969&domain=classic"
+                    rel="ench=2566"><img class="small-icon" src="/static/images/icons/inv_bracer_16.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13344&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_31.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19863&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_19.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16058&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_47.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12930&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_root_02.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=18472&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18510&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_01.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22713&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_waepon_bow_zulgrub_d_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19922&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_bone_dwarfskull_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=23201&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_relics_libramofhope.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+
+                
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Priest" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Angelyne/">Angelyne</a>
+                    </td>
+                    <td>0 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22720&domain=classic"
+                    rel="ench=2590"><img class="small-icon" src="/static/images/icons/inv_helmet_61.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19885&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_45.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19841&domain=classic"
+                    rel="ench=2483"><img class="small-icon" src="/static/images/icons/inv_shoulder_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=14154&domain=classic"
+                    rel="ench=1892"><img class="small-icon" src="/static/images/icons/inv_chest_cloth_31.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19842&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18386&domain=classic"
+                    rel="ench=2590"><img class="small-icon" src="/static/images/icons/inv_pants_06.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19897&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_boots_cloth_09.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19843&domain=classic"
+                    rel="ench=2566"><img class="small-icon" src="/static/images/icons/inv_bracer_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=12554&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_32.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22334&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_05.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=13178&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_22.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18469&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_talisman_10.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18510&domain=classic"
+                    rel="ench=2463"><img class="small-icon" src="/static/images/icons/inv_misc_cape_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19965&domain=classic"
+                    rel="ench=2505"><img class="small-icon" src="/static/images/icons/inv_sword_37.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=18523&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_orb_01.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22254&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_wand_02.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    <tr class="Priest" ><td><a href="/v4/wow/gearcheck/character/jom-gabbar/Stinkymoo/">Stinkymoo</a>
+                    </td>
+                    <td>0 HIT </td>
+
+
+
+
+
+
+
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22720&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_helmet_61.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19593&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_25.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=10100&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_shoulder_06.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16815&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_chest_cloth_03.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19842&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_belt_08.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=16814&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_pants_08.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=22247&domain=classic"
+                    rel="ench=464"><img class="small-icon" src="/static/images/icons/inv_boots_cloth_03.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19843&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_bracer_07.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:yellow;">
+
+                    <a href="https://classic.wowhead.com/item=11634&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_gauntlets_12.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19920&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_47.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19863&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_ring_47.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19930&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_zulgurubtrinket.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=19950&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_jewelry_necklace_13.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=22711&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_misc_cape_16.png"></a>
+                    </td>
+
+
+                    
+                    <td class="unchanted" style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=11932&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_staff_30.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:purple;">
+
+                    <a href="https://classic.wowhead.com/item=0&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/empty.png"></a>
+                    </td>
+
+
+                    
+                    <td  style="background:blue
+                    ;">
+
+                    <a href="https://classic.wowhead.com/item=19967&domain=classic"
+                    rel="ench="><img class="small-icon" src="/static/images/icons/inv_wand_05.png"></a>
+                    </td>
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <td> </td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">High Priestess Mar&#39;li</a></td>
+                    <td>2022-04-04</td>
+                    <!-- <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Heals</a></td>
+                    <td><a href="/v4/wow/encounterinfo/High Priestess Mar&#39;li/2022-04-04T00:23:50.000254">Dps</a></td> -->
+
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+                    
+                    </tr>
+                
+
+
+
+
+            
+            </table>
+        </div>
+
+    </div>
+
+    </div>
+
+
+        <footer class="bg-light text-center text-lg-start footer">
+            <!-- Copyright -->
+
+            <!-- Copyright -->
+        </footer>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
